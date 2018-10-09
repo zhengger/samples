@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:scoped_model/scoped_model.dart';
-import 'package:veggieseasons/data/veggie.dart';
 import 'package:veggieseasons/data/local_veggie_provider.dart';
+import 'package:veggieseasons/data/veggie.dart';
 
 class AppState extends Model {
   List<Veggie> _veggies;
@@ -28,7 +28,7 @@ class AppState extends Model {
   List<Veggie> get favoriteVeggies =>
       _veggies.where((v) => v.isFavorite).toList();
 
-  List<Veggie> searchVeggies(String terms) => _veggies
+  List<Veggie> searchVeggiesSync(String terms) => _veggies
       .where((v) => v.name.toLowerCase().contains(terms.toLowerCase()))
       .toList();
 
