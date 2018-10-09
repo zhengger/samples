@@ -75,6 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     initialData: _search.results.value,
                     stream: _search.results,
                     builder: (context, snapshot) => ListView(
+                          padding: const EdgeInsets.only(bottom: 200.0),
                           children: _generateVeggieRows(snapshot.data),
                         ),
                   ),
