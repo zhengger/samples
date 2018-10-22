@@ -12,34 +12,41 @@ import 'package:veggieseasons/data/veggie.dart';
 class AppState extends Model {
   List<Veggie> _veggies;
 
+  SearchService _searchService;
+
   AppState() : _veggies = LocalVeggieProvider.veggies {
     _searchService = SearchService(this);
   }
 
   List<Veggie> get allVeggies => List<Veggie>.from(_veggies);
 
-  Veggie getVeggie(int id) => _veggies.singleWhere((v) => v.id == id);
-
   List<Veggie> get availableVeggies {
     Season currentSeason = _getSeasonForDate(DateTime.now());
     return _veggies.where((v) => v.seasons.contains(currentSeason)).toList();
   }
+
+  List<Veggie> get favoriteVeggies =>
+      _veggies.where((v) => v.isFavorite).toList();
+
+  Stream<Set<int>> get outOfStockVeggies async* {
+    final nothing = Set<int>();
+    final justCranberries = Set<int>.from([20]);
+    while (true) {
+      yield nothing;
+      await Future.delayed(const Duration(seconds: 1));
+      yield justCranberries;
+      await Future.delayed(const Duration(seconds: 1));
+    }
+  }
+
+  SearchService get searchService => _searchService;
 
   List<Veggie> get unavailableVeggies {
     Season currentSeason = _getSeasonForDate(DateTime.now());
     return _veggies.where((v) => !v.seasons.contains(currentSeason)).toList();
   }
 
-  List<Veggie> get favoriteVeggies =>
-      _veggies.where((v) => v.isFavorite).toList();
-
-  SearchService get searchService => _searchService;
-
-  SearchService _searchService;
-
-  List<Veggie> searchVeggiesSync(String terms) => _veggies
-      .where((v) => v.name.toLowerCase().contains(terms.toLowerCase()))
-      .toList();
+  Veggie getVeggie(int id) => _veggies.singleWhere((v) => v.id == id);
 
   Future<List<Veggie>> searchVeggiesAsync(String terms) async {
     // Constant delay.
@@ -53,6 +60,10 @@ class AppState extends Model {
 
     return searchVeggiesSync(terms);
   }
+
+  List<Veggie> searchVeggiesSync(String terms) => _veggies
+      .where((v) => v.name.toLowerCase().contains(terms.toLowerCase()))
+      .toList();
 
   void toggleFavorite(int id) {
     Veggie veggie = getVeggie(id);
