@@ -10,10 +10,16 @@ class SearchService {
   final _searchTerms = PublishSubject<String>();
 
   SearchService(this._model) {
-    _results = Observable.concat([Observable.just(''), _searchTerms.stream])
-        .debounce(const Duration(milliseconds: 500))
-        .switchMap((terms) async* {
+    final results =
+        Observable.concat([Observable.just(''), _searchTerms.stream])
+            .debounce(const Duration(milliseconds: 500))
+            .switchMap((terms) async* {
       yield await _model.searchVeggiesAsync(terms);
+    });
+
+    _results = Observable.combineLatest2(results, _model.outOfStockVeggies,
+        (List<Veggie> result, Set<int> outOfStock) {
+      return result.where((r) => !outOfStock.contains(r.id)).toList();
     }).shareValue(seedValue: const <Veggie>[]);
   }
 
