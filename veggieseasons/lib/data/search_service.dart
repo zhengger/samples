@@ -13,7 +13,7 @@ class SearchService {
     final resultsSubject = BehaviorSubject<List<Veggie>>();
     _results = resultsSubject.shareValue(seedValue: <Veggie>[]);
     _searchTerms.stream.listen((terms) async {
-      final results = await _model.searchVeggiesAsync(terms, badNetwork: true);
+      final results = await _model.searchVeggiesAsync(terms);
       resultsSubject.add(results);
     });
   }

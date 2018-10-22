@@ -41,14 +41,11 @@ class AppState extends Model {
       .where((v) => v.name.toLowerCase().contains(terms.toLowerCase()))
       .toList();
 
-  Future<List<Veggie>> searchVeggiesAsync(String terms,
-      {bool badNetwork = false}) async {
-    if (badNetwork) {
-      // Constant delay.
-      await Future.delayed(const Duration(milliseconds: 200));
-    }
+  Future<List<Veggie>> searchVeggiesAsync(String terms) async {
+    // Constant delay.
+    await Future.delayed(const Duration(milliseconds: 200));
 
-    if (badNetwork && terms == 'p') {
+    if (terms == 'p') {
       // Additional delay to make a point.
       print('Uh oh, waiting longer for "p".');
       await Future.delayed(const Duration(milliseconds: 1000));
