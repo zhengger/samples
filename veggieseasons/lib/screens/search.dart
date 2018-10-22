@@ -30,17 +30,13 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return CupertinoTabView(
       builder: (context) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: Styles.scaffoldBackground,
-          ),
+        return Container(
+          color: Styles.scaffoldBackground,
           child: SafeArea(
             child: Column(
               children: [
                 _createSearchBox(),
-                Expanded(
-                  child: _createResultsArea(),
-                ),
+                Expanded(child: _createResultsArea()),
               ],
             ),
           ),
@@ -76,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _createSearchBox() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(16.0),
       child: SearchBar(
         controller: _controller,
         focusNode: _focusNode,
@@ -84,18 +80,12 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  List<Widget> _generateVeggieRows(List<Veggie> veggies) {
-    final cards = new List<Widget>();
-
-    for (Veggie veggie in veggies) {
-      cards.add(Padding(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 24.0),
-        child: VeggieHeadline(veggie),
-      ));
-    }
-
-    return cards;
-  }
+  List<Widget> _generateVeggieRows(List<Veggie> veggies) => veggies
+      .map((veggie) => Padding(
+            padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 24.0),
+            child: VeggieHeadline(veggie),
+          ))
+      .toList(growable: false);
 
   void _onTextChanged() {
     search.searchTerms.add(_controller.text);

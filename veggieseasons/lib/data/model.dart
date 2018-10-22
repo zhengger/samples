@@ -48,7 +48,7 @@ class AppState extends Model {
     if (terms == 'p') {
       // Additional delay to make a point.
       print('Uh oh, waiting longer for "p".');
-      await Future.delayed(const Duration(milliseconds: 1000));
+      await Future.delayed(const Duration(milliseconds: 1500));
     }
 
     return searchVeggiesSync(terms);
