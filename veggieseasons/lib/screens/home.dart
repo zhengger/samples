@@ -4,12 +4,17 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:veggieseasons/data/model.dart';
 import 'package:veggieseasons/screens/favorites.dart';
 import 'package:veggieseasons/screens/list.dart';
 import 'package:veggieseasons/screens/search.dart';
 import 'package:veggieseasons/screens/settings.dart';
 
 class HomeScreen extends StatelessWidget {
+  final AppState appState;
+
+  HomeScreen(this.appState);
+
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
@@ -40,7 +45,7 @@ class HomeScreen extends StatelessWidget {
         } else if (index == 1) {
           return FavoritesScreen();
         } else if (index == 2) {
-          return SearchScreen();
+          return SearchScreen(appState);
         } else {
           return SettingsScreen();
         }

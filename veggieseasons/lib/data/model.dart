@@ -2,14 +2,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:scoped_model/scoped_model.dart';
 import 'package:veggieseasons/data/local_veggie_provider.dart';
+import 'package:veggieseasons/data/search_service.dart';
 import 'package:veggieseasons/data/veggie.dart';
 
 class AppState extends Model {
   List<Veggie> _veggies;
 
-  AppState() : _veggies = LocalVeggieProvider.veggies;
+  AppState() : _veggies = LocalVeggieProvider.veggies {
+    _searchService = SearchService(this);
+  }
 
   List<Veggie> get allVeggies => List<Veggie>.from(_veggies);
 
@@ -28,9 +33,29 @@ class AppState extends Model {
   List<Veggie> get favoriteVeggies =>
       _veggies.where((v) => v.isFavorite).toList();
 
+  SearchService get searchService => _searchService;
+
+  SearchService _searchService;
+
   List<Veggie> searchVeggiesSync(String terms) => _veggies
       .where((v) => v.name.toLowerCase().contains(terms.toLowerCase()))
       .toList();
+
+  Future<List<Veggie>> searchVeggiesAsync(String terms,
+      {bool badNetwork = false}) async {
+    if (badNetwork) {
+      // Constant delay.
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
+
+    if (badNetwork && terms == 'p') {
+      // Additional delay to make a point.
+      print('Uh oh, waiting longer for "p".');
+      await Future.delayed(const Duration(milliseconds: 1000));
+    }
+
+    return searchVeggiesSync(terms);
+  }
 
   void toggleFavorite(int id) {
     Veggie veggie = getVeggie(id);

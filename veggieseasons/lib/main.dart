@@ -15,12 +15,14 @@ void main() {
     DeviceOrientation.portraitDown,
   ]);
 
+  final appState = AppState();
+
   runApp(
     ScopedModel<AppState>(
-      model: AppState(),
+      model: appState,
       child: CupertinoApp(
         color: Styles.appBackground,
-        home: HomeScreen(),
+        home: HomeScreen(appState),
       ),
     ),
   );

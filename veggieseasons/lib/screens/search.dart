@@ -2,64 +2,32 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:veggieseasons/data/model.dart';
+import 'package:veggieseasons/data/search_service.dart';
 import 'package:veggieseasons/data/veggie.dart';
 import 'package:veggieseasons/styles.dart';
 import 'package:veggieseasons/widgets/search_bar.dart';
 import 'package:veggieseasons/widgets/veggie_headline.dart';
 
 class SearchScreen extends StatefulWidget {
+  final AppState appState;
+
+  SearchScreen(this.appState);
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
-}
-
-class SearchService {
-  AppState _model;
-
-  SearchService() {
-    _results = Observable(_searchTerms.stream).switchMap((terms) async* {
-      print("Terms received: '$terms'");
-      await Future.delayed(Duration(milliseconds: 2000 ~/ (terms.length + 1)));
-      print("Terms fetched: '$terms'");
-      yield _model?.searchVeggiesSync(terms) ?? const <Veggie>[];
-      print("Terms sent: '$terms'");
-    }).shareValue(seedValue: const <Veggie>[]);
-  }
-
-  ValueObservable<List<Veggie>> _results;
-
-  final _searchTerms = PublishSubject<String>();
-
-  Sink<String> get searchTerms => _searchTerms.sink;
-
-  ValueObservable<List<Veggie>> get results => _results;
-
-  void dispose() {
-    _searchTerms.close();
-  }
-
-  void registerModel(AppState model, String terms) {
-    _model = model;
-    searchTerms.add(terms);
-  }
 }
 
 class _SearchScreenState extends State<SearchScreen> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
-  final _search = SearchService();
+
+  SearchService get search => widget.appState.searchService;
 
   @override
   Widget build(BuildContext context) {
-    final model = ScopedModel.of<AppState>(context, rebuildOnChange: true);
-    _search.registerModel(model, _controller.text);
-
     return CupertinoTabView(
       builder: (context) {
         return DecoratedBox(
@@ -71,14 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
               children: [
                 _createSearchBox(),
                 Expanded(
-                  child: StreamBuilder<List<Veggie>>(
-                    initialData: _search.results.value,
-                    stream: _search.results,
-                    builder: (context, snapshot) => ListView(
-                          padding: const EdgeInsets.only(bottom: 200.0),
-                          children: _generateVeggieRows(snapshot.data),
-                        ),
-                  ),
+                  child: _createResultsArea(),
                 ),
               ],
             ),
@@ -91,7 +52,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     _focusNode.dispose();
-    _search.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -99,6 +60,18 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _controller.addListener(_onTextChanged);
+    _onTextChanged();
+  }
+
+  Widget _createResultsArea() {
+    return StreamBuilder<List<Veggie>>(
+      initialData: search.results.value,
+      stream: search.results,
+      builder: (context, snapshot) => ListView(
+            padding: const EdgeInsets.only(bottom: 200.0),
+            children: _generateVeggieRows(snapshot.data),
+          ),
+    );
   }
 
   Widget _createSearchBox() {
@@ -125,6 +98,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _onTextChanged() {
-    _search.searchTerms.add(_controller.text);
+    search.searchTerms.add(_controller.text);
   }
 }
