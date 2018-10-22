@@ -10,12 +10,11 @@ class SearchService {
   final _searchTerms = PublishSubject<String>();
 
   SearchService(this._model) {
-    final resultsSubject = BehaviorSubject<List<Veggie>>();
-    _results = resultsSubject.shareValue(seedValue: <Veggie>[]);
-    _searchTerms.stream.listen((terms) async {
-      final results = await _model.searchVeggiesAsync(terms);
-      resultsSubject.add(results);
-    });
+    _results = Observable.concat([Observable.just(''), _searchTerms.stream])
+        .debounce(const Duration(milliseconds: 500))
+        .switchMap((terms) async* {
+      yield await _model.searchVeggiesAsync(terms);
+    }).shareValue(seedValue: const <Veggie>[]);
   }
 
   ValueObservable<List<Veggie>> get results => _results;
