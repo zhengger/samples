@@ -49,6 +49,7 @@ class AppState extends Model {
   Veggie getVeggie(int id) => _veggies.singleWhere((v) => v.id == id);
 
   Future<List<Veggie>> searchVeggiesAsync(String terms) async {
+    print("Fetching search results for '$terms'.");
     // Constant delay.
     await Future.delayed(const Duration(milliseconds: 200));
 
