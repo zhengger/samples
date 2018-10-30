@@ -5,9 +5,9 @@ import 'package:veggieseasons/data/veggie.dart';
 class SearchService {
   AppState _model;
 
-  ValueObservable<List<Veggie>> _results;
+  Observable<List<Veggie>> _results;
 
-  final _searchTerms = PublishSubject<String>();
+  final _searchTerms = BehaviorSubject<String>();
 
   SearchService(this._model) {
     final resultsSubject = BehaviorSubject<List<Veggie>>();
@@ -18,7 +18,7 @@ class SearchService {
     });
   }
 
-  ValueObservable<List<Veggie>> get results => _results;
+  Observable<List<Veggie>> get results => _results;
 
   Sink<String> get searchTerms => _searchTerms.sink;
 

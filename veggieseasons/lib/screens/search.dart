@@ -61,11 +61,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _createResultsArea() {
     return StreamBuilder<List<Veggie>>(
-      initialData: search.results.value,
       stream: search.results,
       builder: (context, snapshot) => ListView(
             padding: const EdgeInsets.only(bottom: 200.0),
-            children: _generateVeggieRows(snapshot.data),
+            children: _generateVeggieRows(snapshot.data ?? <Veggie>[]),
           ),
     );
   }
