@@ -7,11 +7,11 @@ void main() {
   // Initialize the model. Can be done outside a widget, like here.
   var counter = Counter();
 
-  // We can now interact with the model from outside of the Flutter widget tree.
-  // Here, we wait 5 seconds and increment the counter.
-  Timer(
+  // Setup a delayed interaction with the model (increment each 5 seconds),
+  // outside of the Flutter widget tree.
+  Timer.periodic(
     const Duration(seconds: 5),
-    () => counter.increment(),
+    (timer) => counter.increment(),
   );
 
   // Now we're ready to run the app...
@@ -59,7 +59,10 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('You have pushed the button this many times:'),
-            // Use the model and rebuild this part of tree when it changes.
+            // ScopedModelDescendant looks for an ancestor ScopedModel widget
+            // and retrieves its model (Counter, in this case).
+            // Then it uses that model to build widgets, and will trigger
+            // rebuilds if the model is updated.
             ScopedModelDescendant<Counter>(
               builder: (context, child, counter) => Text(
                     '${counter.value}',
@@ -70,7 +73,11 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        // Access the model. This won't rebuild anything here when it changes.
+        // ScopedModel.of is another way to access the model object held
+        // by an ancestor ScopedModel. By default, it just returns
+        // the current model and doesn't automatically trigger rebuilds.
+        // Since this button always looks the same, though, no rebuilds
+        // are needed.
         onPressed: () => ScopedModel.of<Counter>(context).increment(),
         tooltip: 'Increment',
         child: Icon(Icons.add),
