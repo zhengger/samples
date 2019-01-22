@@ -17,16 +17,7 @@ class MyCart extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: ScopedModelDescendant<CartModel>(
-                    builder: (context, child, cart) {
-                  return ListView(
-                      children: cart.items
-                          .map((item) => Text(
-                                '· ${item.name}',
-                                style: Theme.of(context).textTheme.title,
-                              ))
-                          .toList());
-                }),
+                child: new _CartList(),
               ),
             ),
             Container(height: 4, color: Colors.black),
@@ -34,6 +25,25 @@ class MyCart extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _CartList extends StatelessWidget {
+  const _CartList({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<CartModel>(
+      builder: (context, child, cart) => ListView(
+          children: cart.items
+              .map((item) => Text(
+                    '· ${item.name}',
+                    style: Theme.of(context).textTheme.title,
+                  ))
+              .toList()),
     );
   }
 }
@@ -52,7 +62,7 @@ class _CartTotal extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ScopedModelDescendant<CartModel>(
-                builder: (context, _, cart) => Text('\$${cart.totalPrice}',
+                builder: (context, child, cart) => Text('\$${cart.totalPrice}',
                     style: Theme.of(context)
                         .textTheme
                         .display4
