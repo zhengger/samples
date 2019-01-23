@@ -10,7 +10,9 @@ class MyAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      title: Text('Catalog', style: Theme.of(context).textTheme.display4),
+      title: Provide<int>(
+          builder: (context, child, value) => Text('Catalog $value',
+              style: Theme.of(context).textTheme.display4)),
       floating: true,
       actions: [
         IconButton(

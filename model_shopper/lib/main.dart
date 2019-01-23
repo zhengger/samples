@@ -9,6 +9,10 @@ void main() {
   final cart = CartModel();
   final providers = Providers()..provideValue(cart);
 
+  // Just for fun: a stream.
+  final tickStream = Stream.periodic(const Duration(seconds: 1), (n) => n);
+  providers.provide(Provider.stream(tickStream));
+
   runApp(
     ProviderNode(
       providers: providers,
