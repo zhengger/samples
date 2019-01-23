@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:model_shopper/models/cart.dart';
+import 'package:model_shopper/provider/provider.dart';
 import 'package:model_shopper/screens/cart.dart';
 import 'package:model_shopper/screens/catalog.dart';
 import 'package:model_shopper/screens/login.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 void main() {
   final cart = CartModel();
+  final providers = Providers()..provideValue(cart);
 
   runApp(
-    ScopedModel<CartModel>(
-      model: cart,
+    ProviderNode(
+      providers: providers,
       child: MyApp(),
     ),
   );

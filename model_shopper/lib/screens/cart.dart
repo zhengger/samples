@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:model_shopper/models/cart.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:model_shopper/provider/provider.dart';
 
 class MyCart extends StatelessWidget {
   @override
@@ -36,7 +36,7 @@ class _CartList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<CartModel>(
+    return Provide<CartModel>(
       builder: (context, child, cart) => ListView(
           children: cart.items
               .map((item) => Text(
@@ -61,7 +61,7 @@ class _CartTotal extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ScopedModelDescendant<CartModel>(
+            Provide<CartModel>(
                 builder: (context, child, cart) => Text('\$${cart.totalPrice}',
                     style: Theme.of(context)
                         .textTheme

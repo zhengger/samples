@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:model_shopper/models/cart.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:model_shopper/provider/provider.dart';
 
 class MyAppBar extends StatelessWidget {
   const MyAppBar({
@@ -88,7 +88,7 @@ class _AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<CartModel>(
+    return Provide<CartModel>(
       builder: (context, _, cart) => FlatButton(
             onPressed: cart.items.contains(item) ? null : () => cart.add(item),
             splashColor: Colors.yellow,
