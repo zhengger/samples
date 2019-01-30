@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:scoped_model/scoped_model.dart' show Model;
+import 'package:flutter/foundation.dart';
 
 const _itemNames = [
   'Code Smell',
@@ -20,7 +20,7 @@ const _itemNames = [
   'Currying',
 ];
 
-class CartModel extends Model {
+class CartModel extends ChangeNotifier {
   /// Internal, private state of the cart.
   final List<Item> _items = [];
 
