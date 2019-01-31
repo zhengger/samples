@@ -36,18 +36,34 @@ class _CartList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// In the current implementation, this screen doesn't allow the user
+    /// to modify the contents of the cart, and the cart can't change
+    /// from the outside (it's not synchronized with a database, for example).
+    /// Therefore, the model can't change while we're on this screen.
+    ///
+    /// But because it's practically guaranteed that we'll want the cart screen
+    /// to be dynamic (allow removing items, changing counts, clearing, etc.)
+    /// we use ScopedModelDescendant here.
+    ///
+    /// This makes sure the cart will always list the current contents of
+    /// the cart.
     return ScopedModelDescendant<CartModel>(
       builder: (context, child, cart) => ListView(
-          children: cart.items
-              .map((item) => Text(
-                    '· ${item.name}',
-                    style: Theme.of(context).textTheme.title,
-                  ))
-              .toList()),
+            // Take the items in the current cart.
+            children: cart.items
+                // For each of them, create a Text widget.
+                .map((item) => Text(
+                      '· ${item.name}',
+                      style: Theme.of(context).textTheme.title,
+                    ))
+                // Then make a list of these widgets.
+                .toList(),
+          ),
     );
   }
 }
 
+/// This is the bottom part of the cart screen, showing the price.
 class _CartTotal extends StatelessWidget {
   const _CartTotal({
     Key key,

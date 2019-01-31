@@ -50,4 +50,8 @@ class Item {
 
   @override
   bool operator ==(other) => other is Item && other.id == id;
+  /// Remove all items in the cart.
+  void clear() {
+    _items.clear();
+  }
 }

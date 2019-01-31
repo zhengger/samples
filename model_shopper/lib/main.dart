@@ -6,10 +6,13 @@ import 'package:model_shopper/screens/login.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 void main() {
+  // The app starts with initializing the model.
   final cart = CartModel();
 
+  // Now we're ready to run the Flutter UI.
   runApp(
     ScopedModel<CartModel>(
+      // Here's where we provide the model to any interested widget below.
       model: cart,
       child: MyApp(),
     ),

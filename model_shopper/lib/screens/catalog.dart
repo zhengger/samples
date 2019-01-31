@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:model_shopper/models/cart.dart';
+import 'package:model_shopper/models/src/item.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+/// The app bar in the catalog.
+///
+/// No need to access shared state here.
 class MyAppBar extends StatelessWidget {
   const MyAppBar({
     Key key,
@@ -21,6 +25,9 @@ class MyAppBar extends StatelessWidget {
   }
 }
 
+/// The catalog screen itself, with its app bar and an infinite list of items.
+///
+/// No need to access shared state here.
 class MyCatalog extends StatelessWidget {
   MyCatalog({Key key}) : super(key: key);
 
@@ -29,7 +36,7 @@ class MyCatalog extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          new MyAppBar(),
+          MyAppBar(),
           SliverToBoxAdapter(child: SizedBox(height: 12)),
           SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -41,6 +48,9 @@ class MyCatalog extends StatelessWidget {
   }
 }
 
+/// An item in the catalog.
+///
+/// It allows adding its [item] to cart via the [_AddButton] widget.
 class MyListItem extends StatelessWidget {
   final int index;
 
@@ -79,6 +89,9 @@ class MyListItem extends StatelessWidget {
   }
 }
 
+/// The button that says 'ADD' or 'ADDED' depending on whether the item
+/// is already in cart. When it isn't, the button is enabled, and calls
+/// [CartModel.add()] when tapped.
 class _AddButton extends StatelessWidget {
   final Item item;
 
@@ -89,10 +102,19 @@ class _AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Here is where we access the shared state of the cart. Because we
+    // need to change the UI here according to the contents of the cart,
+    // we use the ScopedModelDescendant widget (instead of ScopedModel.of).
     return ScopedModelDescendant<CartModel>(
       builder: (context, child, cart) => FlatButton(
+            // We check whether the cart already has the item in it,
+            // and if so, we give `null` to onPressed (making it disabled).
+            // Otherwise, we provide a callback that calls a method
+            // on the cart model.
             onPressed: cart.items.contains(item) ? null : () => cart.add(item),
             splashColor: Colors.yellow,
+            // Similarly, we change the text of the button according
+            // to the state of the cart.
             child: Text(cart.items.contains(item) ? 'ADDED' : 'ADD'),
           ),
     );
