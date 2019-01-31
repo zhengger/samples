@@ -1,24 +1,7 @@
 import 'dart:collection';
 
+import 'package:model_shopper/models/src/item.dart';
 import 'package:scoped_model/scoped_model.dart';
-
-const _itemNames = [
-  'Code Smell',
-  'Control Flow',
-  'Interpreter',
-  'Recursion',
-  'Sprint',
-  'Heisenbug',
-  'Spaghetti',
-  'Hydra Code',
-  'Off-By-One',
-  'Scope',
-  'Callback',
-  'Closure',
-  'Automata',
-  'Bit Shift',
-  'Currying',
-];
 
 class CartModel extends Model {
   /// Internal, private state of the cart.
@@ -37,19 +20,7 @@ class CartModel extends Model {
     // depend on it.
     notifyListeners();
   }
-}
 
-class Item {
-  final int id;
-  final String name;
-
-  Item(this.id) : name = _itemNames[id % _itemNames.length];
-
-  @override
-  int get hashCode => id;
-
-  @override
-  bool operator ==(other) => other is Item && other.id == id;
   /// Remove all items in the cart.
   void clear() {
     _items.clear();
