@@ -32,8 +32,9 @@ class MyCatalog extends StatelessWidget {
           new MyAppBar(),
           SliverToBoxAdapter(child: SizedBox(height: 12)),
           SliverList(
-              delegate:
-                  SliverChildBuilderDelegate((_, index) => MyListItem(index))),
+            delegate: SliverChildBuilderDelegate(
+                (context, index) => MyListItem(index)),
+          ),
         ],
       ),
     );
@@ -89,7 +90,7 @@ class _AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<CartModel>(
-      builder: (context, _, cart) => FlatButton(
+      builder: (context, child, cart) => FlatButton(
             onPressed: cart.items.contains(item) ? null : () => cart.add(item),
             splashColor: Colors.yellow,
             child: Text(cart.items.contains(item) ? 'ADDED' : 'ADD'),
