@@ -113,9 +113,9 @@ class _AddButton extends StatelessWidget {
             // on the cart model.
             onPressed: cart.items.contains(item) ? null : () => cart.add(item),
             splashColor: Colors.yellow,
-            // Similarly, we change the text of the button according
+            // Similarly, we change the content of the button according
             // to the state of the cart.
-            child: Text(cart.items.contains(item) ? 'ADDED' : 'ADD'),
+            child: cart.items.contains(item) ? Icon(Icons.check) : Text('ADD'),
           ),
     );
   }
